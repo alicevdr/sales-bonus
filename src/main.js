@@ -32,9 +32,28 @@ function calculateBonusByProfit(index, total, seller) {
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
 function analyzeSalesData(data, options) {
+
+     let sellers = [];
+  let products = [];
+  let purchaseRecords = [];
+  
+  if (arguments.length >= 3) {
+   
+    sellers = arguments[0] || [];
+    products = arguments[1] || [];
+    purchaseRecords = arguments[2] || [];
+    options = arguments[3] || {};
+  } else if (data && typeof data === 'object') {
+    
+    sellers = data.sellers || [];
+    products = data.products || [];
+    purchaseRecords = data.purchase_records || data.purchases || [];
+    options = options || {};
+  }
   const { calculateRevenue, calculateBonus } = options;
 
-  const purchaseData = purchaseRecords || [];
+  const purchaseData =
+    data.purchase_record || data.purchase_records || data.purchases || [];
 
   if (
     !data ||
@@ -61,7 +80,7 @@ function analyzeSalesData(data, options) {
     throw new Error("Отсутствуют необходимые функции для расчётов");
   }
 
-  const sellerStats = sellers.map((seller) => ({
+  const sellerStats = data.sellers.map((seller) => ({
     seller_id: seller.id || seller.seller_id,
     name:
       seller.name ||
@@ -76,8 +95,8 @@ function analyzeSalesData(data, options) {
     sellerStats.map((seller) => [seller.seller_id, seller]),
   );
 
-    const productIndex = Object.fromEntries(
-    products.map((product) => [product.sku || product.id, product])
+  const productIndex = Object.fromEntries(
+    data.products.map((product) => [product.sku || product.id, product]),
   );
  
   if (Array.isArray(purchaseData)) {
