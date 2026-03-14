@@ -34,8 +34,7 @@ function calculateBonusByProfit(index, total, seller) {
 function analyzeSalesData(data, options) {
   const { calculateRevenue, calculateBonus } = options;
 
-  const purchaseData =
-    data.purchase_record || data.purchase_records || data.purchases || [];
+  const purchaseData = purchaseRecords || [];
 
   if (
     !data ||
@@ -62,7 +61,7 @@ function analyzeSalesData(data, options) {
     throw new Error("Отсутствуют необходимые функции для расчётов");
   }
 
-  const sellerStats = data.sellers.map((seller) => ({
+  const sellerStats = sellers.map((seller) => ({
     seller_id: seller.id || seller.seller_id,
     name:
       seller.name ||
@@ -77,8 +76,8 @@ function analyzeSalesData(data, options) {
     sellerStats.map((seller) => [seller.seller_id, seller]),
   );
 
-  const productIndex = Object.fromEntries(
-    data.products.map((product) => [product.sku || product.id, product]),
+    const productIndex = Object.fromEntries(
+    products.map((product) => [product.sku || product.id, product])
   );
  
   if (Array.isArray(purchaseData)) {
@@ -105,7 +104,7 @@ function analyzeSalesData(data, options) {
             sale_price: item.price || item.sale_price,
             quantity: item.quantity || 1,
           },
-          _product,
+          product,
         );
 
         const profit = revenue - cost;
