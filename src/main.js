@@ -105,7 +105,7 @@ function analyzeSalesData(data, options) {
             sale_price: item.price || item.sale_price,
             quantity: item.quantity || 1,
           },
-          product,
+          _product,
         );
 
         const profit = revenue - cost;
@@ -138,10 +138,10 @@ function analyzeSalesData(data, options) {
   return sellerStats.map((seller) => ({
     seller_id: seller.seller_id,
     name: seller.name,
-    revenue: seller.revenue.toFixed(2),
-    profit: seller.profit.toFixed(2),
+    revenue: +seller.revenue.toFixed(2),
+    profit: +seller.profit.toFixed(2),
     sales_count: seller.sales_count,
     top_products: seller.top_products,
-    bonus: seller.bonus.toFixed(2),
+    bonus: +seller.bonus.toFixed(2),
   }));
 }
